@@ -8,7 +8,7 @@ import { getDatabase, ref, set } from "firebase/database";
 import { getFirestore } from "firebase/firestore";
 import { collection, addDoc } from "firebase/firestore"; 
 import { doc, setDoc } from "firebase/firestore";
-
+import PhoneLogin from "./phone-login";
 import { MoralisProvider } from "react-moralis";
 const Form = () => {
     // TODO: Add SDKs for Firebase products that you want to use
@@ -35,7 +35,7 @@ const Form = () => {
         const { Moralis } = useMoralis();
 
         const [formValues, setFormValues] = useState([{ fieldName: "Name", fieldValue: "", idValue:"metadataName"},
-        { fieldName: "UID No.", fieldValue: "", idValue:"metadataUID"},
+        { fieldName: "UID No.", fieldValue: "", idValue:"metadataUID"},  { fieldName: "Phone no.", fieldValue: "" , idValue:"metadataUID"},
         { fieldName: "Age", fieldValue: "", idValue:"metadataAge" },
         { fieldName: "Blood_Group", fieldValue: "", idValue:"metadataBloodGroup" },
         { fieldName: "Gender", fieldValue: "", idValue:"metadataGender"}])

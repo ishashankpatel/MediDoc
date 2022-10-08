@@ -60,7 +60,7 @@ export default function Doctor(props) {
                         setPassword(e.target.value)
                     }}
                 />
-                <Link href="/userAuth">
+                <Link href="/phone-login">
                     <a>
                         <Button
                         fullWidth
