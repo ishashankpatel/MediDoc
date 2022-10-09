@@ -37,11 +37,7 @@ export default function Home() {
         )}
 
 
-        <Routes>
-        <Route path="/Homes" element={Form} />
-    <Route path="/phone-login" element={PhoneLogin} />
-    <Route path="/doctor" element={Doctor} />
-        </Routes>
+       
     </div>
   );
 }

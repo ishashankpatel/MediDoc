@@ -6,23 +6,31 @@ import Col from "react-bootstrap/Col";
 import { authentication } from "./firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
-import { Navigate, useNavigate } from "react-router-dom";
+import {Routes, Route, useNavigate, Navigate, unstable_HistoryRouter} from 'react-router-dom';
+import Doctor from "./Doctor";
+import { Hidden } from "@mui/material";
 
 export default class PhoneLogin extends Component {
+  
   constructor() {
-    let authh=false;
+    
     super();
     this.state = {
+      isDisabled: true,
       form: true,
       alert: false,
+      isVisible:Hidden,
+    
     };
   }
-
+ 
   onChangeHandler = (event) => {
     const { name, value } = event.target;
     this.setState({
       [name]: value,
+      
     });
+    
   };
 
   setUpRecaptcha = () => {
@@ -55,6 +63,7 @@ export default class PhoneLogin extends Component {
   };
 
   onSubmitOtp = (e) => {
+   
     e.preventDefault();
     let otpInput = this.state.otp;
     let confirmationResult = window.confirmationResult;
@@ -63,10 +72,13 @@ export default class PhoneLogin extends Component {
     confirmationResult.confirm(otpInput).then((result) => {
       // User signed in successfully.
       const user = result.user;
-      
+     
       console.log("suceesful");
-      authh=true; 
-      <Navigate to={'\Home'} />
+      
+      this.setState({
+        isDisabled: false,
+        
+      });
       // ...
     }).catch((error) => {
       // User couldn't sign in (bad verification code?)
@@ -113,12 +125,19 @@ export default class PhoneLogin extends Component {
                 </Form.Group>
                 
               </Form>
+              
+              <a href="/Homes">
+                <button disabled={this.state.isDisabled} >
+  Verified
+</button></a>
             </Col>
           </Row>
          <div id="reCAPTCHA-conatainer"> </div>
         </Container>
+        
       </div>
     );
    
   }
+  
 }

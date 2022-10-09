@@ -10,6 +10,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { doc, setDoc } from "firebase/firestore";
 import PhoneLogin from "./phone-login";
 import { MoralisProvider } from "react-moralis";
+import { app } from "./firebase";
 const Form = () => {
     // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -28,14 +29,14 @@ const Form = () => {
         };
         
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
+        
         const db = getFirestore(app);
         const [state, setState] = useState("loading (4 sec)...");
         const [mounted, setMounted] = useState(true);
         const { Moralis } = useMoralis();
 
         const [formValues, setFormValues] = useState([{ fieldName: "Name", fieldValue: "", idValue:"metadataName"},
-        { fieldName: "UID No.", fieldValue: "", idValue:"metadataUID"},  { fieldName: "Phone no.", fieldValue: "" , idValue:"metadataUID"},
+        { fieldName: "UID No.", fieldValue: "", idValue:"metadataUID"},  { fieldName: "Phone no.", fieldValue: "" , idValue:"metadatano"},
         { fieldName: "Age", fieldValue: "", idValue:"metadataAge" },
         { fieldName: "Blood_Group", fieldValue: "", idValue:"metadataBloodGroup" },
         { fieldName: "Gender", fieldValue: "", idValue:"metadataGender"}])
@@ -82,13 +83,16 @@ const Form = () => {
             const age=document.getElementById('metadataAge').value;
             const bloodGroup=document.getElementById('metadataBloodGroup').value;
             const gender=document.getElementById('metadataGender').value;
+            const phonee=document.getElementById('metadatano').value;
+
 
             const metadata={
                 "name": name,
                 "uid":uid,
                 "age":age,
                 "bloodGroup":bloodGroup,
-                "gender":gender
+                "gender":gender,
+                "phone":phonee
             }
             console.log(metadata);
             const file=new Moralis.File("file.json", {base64:Buffer.from(JSON.stringify(metadata)).toString('base64')});
@@ -96,21 +100,31 @@ const Form = () => {
             console.log("Done!")
             console.log(file.ipfs());
 
-            await setDoc(doc(db, "IPFSLink", "Data"), file.ipfs().toString());
             url.push(file.ipfs());
         }
-        let handleSubmit = async() => {
+        let handleSubmit = async event => {
+            event.preventDefault();
             setMounted(!mounted);
             alert("Submitted");
-            await uploadMetadata("test object")
+            await uploadMetadata("test object");
+            try {
+                const docRef = await addDoc(collection(db, "users"), {
+                  IPFS: url,
+                  Uid: document.getElementById('metadataUID').value,
+                  phone:document.getElementById('metadatano').value
+                });
+                console.log("Document written with ID: ", docRef.id);
+              } catch (e) {
+                console.error("Error adding document: ", e);
+              }
         }
-        useEffect(() => {
-            let isMounted = true;               // note mutable flag
-            uploadMetadata().then(data => {
-            if (isMounted){setState(data);}    // add conditional check
-            })
-            return () => { isMounted = false }; // cleanup toggles value, if unmounted
-        }, []);     
+        // useEffect(() => {
+        //     let isMounted = true;               // note mutable flag
+        //     uploadMetadata().then(data => {
+        //     if (isMounted){setState(data);}    // add conditional check
+        //     })
+        //     return () => { isMounted = false }; // cleanup toggles value, if unmounted
+        // }, []); 
         return (
             <MoralisProvider
 appId="MyFpOagRB5pWdqQ8R56jZU9YJUn5dGP2KAoWAhoi"
