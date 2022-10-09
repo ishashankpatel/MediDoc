@@ -15,7 +15,7 @@ export default class App extends Component {
     const axios = require('axios').default;
       try {
         const response = await axios.get('https://gateway.moralisipfs.com/ipfs/QmNbQfmG5iqnzVdGN6fRAKPaY6Gn9nVe8LunAmXH6P9tzE')
-        console.log(response);
+        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
